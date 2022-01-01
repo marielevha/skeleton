@@ -1,6 +1,7 @@
 import warnings
 import dateparser
 import utils.constants as const
+
 # Ignore dateparser warnings regarding pytz
 warnings.filterwarnings(
     "ignore",
@@ -9,22 +10,22 @@ warnings.filterwarnings(
 
 
 class AvitoCleanData:
-    def __init__(self, input_data=const.FAKE_DATA):
+    def __init__(self, input_data=const.AVITO_FAKE_DATA):
         self.input_data = input_data
         self.output_data = []
 
     def add_type_by_string_contains(self):
-        for el in self.input_data['data'].copy():
+        for el in self.input_data.copy():
             for phone in const.PHONE_TYPES[::-1]:
-                if phone.lower() in el['title'].lower():
-                    el['type'] = phone.lower()
+                if phone.lower() in el["title"].lower():
+                    el["type"] = phone.lower()
                     self.output_data.append(el)
                     break
 
     def format_date(self):
         for el in self.output_data.copy():
-            dt = f"{el['date']} {el['time']}"
-            el['date'] = dateparser.parse(dt).date()
+            dt = f'{el["date"]}'  # {el['time']}"
+            el["date"] = dateparser.parse(dt)  # .date() | .time()
 
     def clean_up_missing_data(self):
         self.add_type_by_string_contains()
@@ -32,3 +33,12 @@ class AvitoCleanData:
 
     def show_output(self):
         print(self.output_data)
+
+
+# cleaner = AvitoCleanData()
+# cleaner.clean_up_missing_data()
+# cleaner.show_output()
+# print(f"LENGTH OUTPUT DATA: {len(cleaner.output_data)}")
+#
+# for ell in cleaner.output_data:
+#     print(f"EL DATE: {ell}")

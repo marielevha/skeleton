@@ -1,6 +1,7 @@
 import warnings
 import dateparser
 import utils.constants as const
+
 # Ignore dateparser warnings regarding pytz
 warnings.filterwarnings(
     "ignore",
@@ -9,7 +10,7 @@ warnings.filterwarnings(
 
 
 class MACleanData:
-    def __init__(self, input_data=const.FAKE_DATA):
+    def __init__(self, input_data=const.MA_FAKE_DATA):
         self.input_data = input_data
         self.output_data = []
 
@@ -24,7 +25,7 @@ class MACleanData:
     def format_date(self):
         for el in self.output_data.copy():
             dt = f"{el['date']} {el['time']}"
-            el['date'] = dateparser.parse(dt).date()
+            el['date'] = dateparser.parse(dt)  # .date() | .time()
 
     def clean_up_missing_data(self):
         self.add_type_by_string_contains()
@@ -34,9 +35,7 @@ class MACleanData:
         print(self.output_data)
 
 
-
-
-import re
+'''import re
 from datetime import datetime
 import time
 import locale
@@ -96,7 +95,7 @@ def format_date():
 
 
 def add_type_by_string_contains():
-    for el in const.FAKE_DATA['data'].copy():
+    for el in const.MA_FAKE_DATA['data'].copy():
         for phone in const.PHONE_TYPES[::-1]:
             if phone.lower() in el['title'].lower():
                 el['type'] = phone.lower()
@@ -127,3 +126,4 @@ clean_up_missing_data()
 # for date_string in [u"Aujourd'hui", "3 juillet", u"4 Août", u"Hier", "20 Déc 2021 12:30:43"]:
 #     print(dateparser.parse(date_string).date())
 #     print(dateparser.parse(date_string).time())
+'''
