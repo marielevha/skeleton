@@ -11,12 +11,12 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.chrome.options import Options
 
 
-def get_options():
-    options = Options()
-    options.add_argument("--window-size=1920,1080")
-    options.add_argument("--start-maximized")
-    options.add_argument("--headless")
-    return options
+# def get_options():
+#     options = Options()
+#     options.add_argument("--window-size=1920,1080")
+#     options.add_argument("--start-maximized")
+#     options.add_argument("--headless")
+#     return options
 
 
 class AvitoScraper(webdriver.Chrome):
@@ -27,7 +27,7 @@ class AvitoScraper(webdriver.Chrome):
         # options = webdriver.ChromeOptions()
         # options.add_experimental_option('excludeSwitches', ['enable-logging'])
         # options.add_argument('headless')
-        options = get_options()
+        options = const.CHROME_OPTIONS()
         super(AvitoScraper, self).__init__(options=options)
         self.implicitly_wait(10)
         self.maximize_window()

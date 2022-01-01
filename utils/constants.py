@@ -1,3 +1,5 @@
+from selenium.webdriver.chrome.options import Options
+
 BASE_URL = "https://www.booking.com"
 AVITO_BASE_URL = 'https://www.avito.ma'
 MAROC_ANNOUNCE_BASE_URL = 'https://www.marocannonces.com/categorie/306/Multim%C3%A9dia.html?bloc=1'
@@ -330,4 +332,14 @@ FAKE_DATA = {"status": 0, "data": [
      "time": "15:27"},
     {"title": "Iphone 6 plus", "price": "3 500 DH", "city": "Casablanca", "date": "20 Sep", "time": "14:50"},
     {"title": "Iphone 5 blanc 16go", "price": "3 100 DH", "city": "Casablanca", "date": "20 Sep", "time": "14:29"}],
-        "page": 1}
+             "page": 1}
+
+
+# CHROME_OPTIONS = get_options()
+
+def CHROME_OPTIONS():
+    options = Options()
+    options.add_argument("--window-size=1920,1080")
+    options.add_argument("--start-maximized")
+    options.add_argument("--headless")
+    return options
