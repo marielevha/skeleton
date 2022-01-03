@@ -3,6 +3,9 @@ from selenium.webdriver.chrome.options import Options
 BASE_URL = "https://www.booking.com"
 AVITO_BASE_URL = 'https://www.avito.ma'
 MAROC_ANNOUNCE_BASE_URL = 'https://www.marocannonces.com/categorie/306/Multim%C3%A9dia.html?bloc=1'
+SCRAP_MARKET = 'Iphone 8'
+AVITO_SOURCE = 'avito'
+MA_SOURCE = 'marocannonces'
 SELENIUM_DRIVERS_PATH = r'/home/ssdlv/Documents/ssdlv/courses/python/skeleton/zdrivers/'
 NOT_FOUND_ELEMENT = 'no such element: Unable to locate element'
 
@@ -40,7 +43,7 @@ PHONE_TYPES = [
     'iPhone 13 Pro',
     'iPhone 13 Pro Max'
 ]
-MA_FAKE_DATA = {"status": 0, "data": [
+MA_FAKE_DATA = [
     {"title": "Iphone 11 noir", "price": "5 500 DH", "city": "Casablanca", "date": "20 Déc 2021", "time": "17:14"},
     {"title": "IPhone 13 pro max 256 g neuf", "price": "16 000 DH", "city": "Casablanca", "date": "13 Déc 2021",
      "time": "23:08"},
@@ -331,8 +334,7 @@ MA_FAKE_DATA = {"status": 0, "data": [
     {"title": "Iphone 6 Noir 16 Go Officiel jamais ouvert", "price": "6 800 DH", "city": "Casablanca", "date": "20 Sep",
      "time": "15:27"},
     {"title": "Iphone 6 plus", "price": "3 500 DH", "city": "Casablanca", "date": "20 Sep", "time": "14:50"},
-    {"title": "Iphone 5 blanc 16go", "price": "3 100 DH", "city": "Casablanca", "date": "20 Sep", "time": "14:29"}],
-                "page": 1}
+    {"title": "Iphone 5 blanc 16go", "price": "3 100 DH", "city": "Casablanca", "date": "20 Sep", "time": "14:29"}]
 AVITO_FAKE_DATA = [
     {"title": "IPHONE 8 plus 64GB", "price": "2 500", "city": "Casablanca", "date": "14:42", "source": "avito"},
     {"title": "iPhone XS 64GB", "price": "3 600", "city": "Casablanca", "date": "14:41", "source": "avito"},
@@ -3492,6 +3494,23 @@ AVITO_FAKE_DATA = [
     {"title": "iphone x 64 noir", "price": "3 000", "city": "Salé", "date": "05 Décembre", "source": "avito"},
     {"title": "iphone 5s", "price": "700", "city": "Fquih Ben Saleh", "date": "05 Décembre", "source": "avito"},
     {"title": "IPHONE 11 OFFICIEL", "price": "4 800", "city": "Meknès", "date": "05 Décembre", "source": "avito"}]
+
+MA_DATE_LABEL = [
+    {'m': 'Jan', 'value': 1},
+    {'m': 'Jan', 'value': 1},
+    {'m': 'Jan', 'value': 1},
+    {'m': 'Jan', 'value': 1},
+    {'m': 'Jan', 'value': 1},
+    {'m': 'Mai', 'value': 1},
+    {'m': 'Jun', 'value': 1},
+    {'m': 'Jul', 'value': 1},
+    {'m': 'Aoû', 'value': 1},
+    {'m': 'Sep', 'value': 1},
+    {'m': 'Oct', 'value': 1},
+    {'m': 'Nov', 'value': 1},
+    {'m': 'Déc', 'value': 12},
+]
+
 
 # CHROME_OPTIONS = get_options()
 

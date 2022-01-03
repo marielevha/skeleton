@@ -1,0 +1,40 @@
+{% extends "./base.html" %}
+
+{% block body %}
+<div class="table-responsive">
+    <table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">TITLE</th>
+      <th scope="col">PRICE</th>
+      <th scope="col">DATE</th>
+      <th scope="col">SOURCE</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for announce in announces %}
+    <tr>
+      <th scope="row">#{{announce.id}}</th>
+      <td>{{announce.title}}</td>
+      <td>{{announce.price}}</td>
+      <td>{{announce.date}}</td>
+      <td>{{announce.source}}</td>
+    </tr>
+  {% endfor %}
+    <!--<tr>
+      <th scope="row">2</th>
+      <td>Jacob</td>
+      <td>Thornton</td>
+      <td>@fat</td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td>Larry</td>
+      <td>the Bird</td>
+      <td>@twitter</td>
+    </tr>-->
+  </tbody>
+</table>
+</div>
+{% endblock %}

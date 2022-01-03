@@ -27,9 +27,16 @@ class AvitoCleanData:
             dt = f'{el["date"]}'  # {el['time']}"
             el["date"] = dateparser.parse(dt)  # .date() | .time()
 
+    def format_price(self):
+        for el in self.output_data.copy():
+            price = el['price'].replace('DH', '')
+            el['price'] = float(price.replace(' ', ''))
+
     def clean_up_missing_data(self):
         self.add_type_by_string_contains()
         self.format_date()
+        self.format_price()
+        return self.output_data
 
     def show_output(self):
         print(self.output_data)

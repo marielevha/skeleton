@@ -12,5 +12,24 @@ class Ad(Base):
     city = Column('city', String)
 
 
-engine = create_engine('sqlite:///scraper.sqlite', echo=True)
-Base.metadata.create_all(bind=engine)
+# engine = create_engine('sqlite:///skeleton.sqlite3', echo=True)
+# Base.metadata.create_all(bind=engine)
+
+
+import schedule
+import time
+
+
+def good_lick():
+    print('Good Luck for Test')
+
+
+def work():
+    print('Study and work hard')
+
+
+schedule.every(10).seconds.do(good_lick)
+
+while True:
+    schedule.run_pending()
+    # time.sleep(1)

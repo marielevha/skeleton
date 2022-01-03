@@ -132,13 +132,17 @@ class AvitoScraper(webdriver.Chrome):
 
         print(len(boxes))
         for box in boxes:
-            ad = dict()
-            ad["title"] = " ".join(self.get_ad_title(box).split())
-            ad["price"] = self.get_ad_price(box)
-            ad["city"] = " ".join(self.get_ad_city(box).split())
-            ad["date"] = " ".join(self.get_ad_date(box).split())
-            ad['source'] = "avito"
-            self.data["data"].append(ad)
+            try:
+                ad = dict()
+                ad["title"] = " ".join(self.get_ad_title(box).split())
+                ad["price"] = self.get_ad_price(box)
+                ad["city"] = " ".join(self.get_ad_city(box).split())
+                ad["date"] = " ".join(self.get_ad_date(box).split())
+                ad['source'] = const.AVITO_SOURCE
+                self.data["data"].append(ad)
+            except Exception as e:
+                print(e)
+                continue
 
         print(self.data)
         # Pass to next page if exist
@@ -261,6 +265,9 @@ class AvitoScraper(webdriver.Chrome):
     def show_ad(self):
         # print(json.dumps(self.data))
         print(self.data)
+
+    def get_final_data(self):
+        return self.data['data']
 
     def navigate_to_next_page(self):
         if self.path is not None and self.totalPages > self.currentPages and self.next:

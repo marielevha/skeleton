@@ -15,7 +15,7 @@ class MACleanData:
         self.output_data = []
 
     def add_type_by_string_contains(self):
-        for el in self.input_data['data'].copy():
+        for el in self.input_data.copy():
             for phone in const.PHONE_TYPES[::-1]:
                 if phone.lower() in el['title'].lower():
                     el['type'] = phone.lower()
@@ -25,11 +25,25 @@ class MACleanData:
     def format_date(self):
         for el in self.output_data.copy():
             dt = f"{el['date']} {el['time']}"
-            el['date'] = dateparser.parse(dt)  # .date() | .time()
+            el['datetime'] = dateparser.parse(dt)  # .date() | .time()
+
+    def format_price(self):
+        for el in self.output_data.copy():
+            price = el['price'].replace('DH', '')
+            el['price'] = float(price.replace(' ', ''))
+
+    def sort_data(self):
+        # from datetime import datetime
+        # my_dates = ['5-Nov-18', '25-Mar-17', '1-Nov-18', '7-Mar-17']
+        # my_dates.sort(key=lambda date: datetime.strptime(date, "%d-%b-%y"))
+        # print(my_dates)
+        print()
 
     def clean_up_missing_data(self):
         self.add_type_by_string_contains()
         self.format_date()
+        self.format_price()
+        return self.output_data
 
     def show_output(self):
         print(self.output_data)

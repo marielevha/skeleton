@@ -8,10 +8,21 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.chrome.options import Options
+import dateparser
+import warnings
+
+# Ignore dateparser warnings regarding pytz
+warnings.filterwarnings(
+    "ignore",
+    message="The localize method is no longer necessary, as this time zone supports the fold attribute",
+)
 
 
 class MAScraper(webdriver.Chrome):
-    def __init__(self, driver_path=const.SELENIUM_DRIVERS_PATH, teardown=False):
+    def __init__(self, driver_path=const.SELENIUM_DRIVERS_PATH, teardown=False, last_record=None):
+        print(f"LAST R TYPE: {type(last_record)}")
+        # if last_record is None:
+        #     last_record = {'title': 'Apple iPhone 8 64Go Gold', 'price': '1 800 DH', 'date': '22 Aoû', 'time': '14:54'}
         self.driver_path = driver_path
         self.teardown = teardown
         os.environ['PATH'] += self.driver_path
@@ -20,6 +31,7 @@ class MAScraper(webdriver.Chrome):
         super(MAScraper, self).__init__(options=options)
         self.implicitly_wait(10)
         self.maximize_window()
+        self.last_record = last_record
 
         self.data = dict()
         self.data["status"] = 0
@@ -144,7 +156,7 @@ class MAScraper(webdriver.Chrome):
         # print(len(boxes))
         for box in boxes:
             try:
-                title = box.find_element(
+                '''title = box.find_element(
                     By.TAG_NAME,
                     'h3'
                 ).get_attribute('innerHTML')
@@ -169,15 +181,34 @@ class MAScraper(webdriver.Chrome):
                 time = date_elements[1].find_element(
                     By.TAG_NAME,
                     'span'
-                ).get_attribute('innerHTML')
+                ).get_attribute('innerHTML')'''
 
                 ad = dict()
-                ad['title'] = " ".join(title.split())
-                ad['price'] = " ".join(price.split())
-                ad['city'] = " ".join(city.split())
-                ad['date'] = " ".join(date.split())
-                ad['time'] = " ".join(time.split())
-                ad['source'] = "marocannonces"
+                ad['title'] = " ".join(self.get_ad_title(box).split())
+                ad['price'] = " ".join(self.get_ad_price(box).split())
+                ad['city'] = " ".join(self.get_ad_city(box).split())
+                ad['date'] = " ".join(self.get_ad_date(box)[0].split())
+                ad['time'] = " ".join(self.get_ad_date(box)[1].split())
+                ad['source'] = const.MA_SOURCE
+
+                current_record = {
+                    'title': ad['title'],
+                    'date': dateparser.parse(f"{ad['date']} {ad['time']}")
+                }
+                # print(f"CURRENT RECORD: {ad}")
+                # print(f"LAST RECORD: {self.last_record}")
+                # and (self.last_record['date'] < current_record['date'])
+                if (self.last_record is not None) and (self.last_record['original_date'] == ad['date']) and (
+                        self.last_record['original_time'] == ad['time']):
+                    price = (ad['price'].replace('DH', '')).replace(' ', '')
+                    if (self.last_record['title'] == ad['title']) and (self.last_record['price'] == float(price)):
+                        self.next = False
+                        print('##################################### EXACT #####################################')
+                        print(f"CURRENT RECORD: {ad}")
+                        print('##################################### EXACT #####################################')
+                        # print(f"LAST RECORD: {self.last_record}")
+                        self.quit()
+                        break
                 self.data['data'].append(ad)
             except Exception as e:
                 print(e)
@@ -191,62 +222,39 @@ class MAScraper(webdriver.Chrome):
         # print(boxes)
 
     def get_ad_title(self, box: WebElement):
-        title_container = box.find_element(
-            By.CSS_SELECTOR,
-            'span[data-testid="adSubject"]'
-        )
-        title = title_container.find_element(
+        title = box.find_element(
             By.TAG_NAME,
-            'span'
+            'h3'
         ).get_attribute('innerHTML')
         return title
 
     def get_ad_price(self, box: WebElement):
-        try:
-            price_container = box.find_element(
-                By.CSS_SELECTOR,
-                'span[data-testid="adPrice"]'
-            )
-            price = price_container.find_elements(
-                By.TAG_NAME,
-                'span'
-            )[0].get_attribute('innerHTML')
-            return price
-        except Exception as e:
-            print(e)
-            print("PRICE UNDEFINED")
-            return None
+        price = box.find_element(
+            By.TAG_NAME,
+            'strong[class="price"]'
+        ).get_attribute('innerHTML')
+        return price
 
     def get_ad_city(self, box: WebElement):
-        # svg1_container = WebDriverWait(self, 5).until(
-        #     EC.presence_of_element_located((
-        #         By.CSS_SELECTOR,
-        #         'svg[aria-labelledby="TimeFillTitleID"]'
-        #     ))
-        # )
-
-        # svg2_container = WebDriverWait(self, 5).until(
-        #     EC.presence_of_element_located((
-        #         By.CSS_SELECTOR,
-        #         'svg[aria-labelledby="MapPinFillTitleID"]'
-        #     ))
-        # )
-        container = box.find_elements(
+        city = box.find_element(
             By.CSS_SELECTOR,
-            'span[class="sc-1x0vz2r-0 kIeipZ"]'
-        )
-        if len(container) == 2:
-            city = container[1].get_attribute('innerHTML')
-            return city
+            'span[class="location"]'
+        ).get_attribute('innerHTML')
+        return city
 
     def get_ad_date(self, box: WebElement):
-        container = box.find_elements(
+        date_elements = box.find_elements(
             By.CSS_SELECTOR,
-            'span[class="sc-1x0vz2r-0 kIeipZ"]'
+            'em[class="date"]'
         )
-        if len(container) == 2:
-            date = container[0].get_attribute('innerHTML')
-            return date
+
+        el = date_elements[1].get_attribute('innerHTML')
+        date = el.split('<br>')[0]
+        time = date_elements[1].find_element(
+            By.TAG_NAME,
+            'span'
+        ).get_attribute('innerHTML')
+        return [date, time]
 
     def show_ad(self):
         print(self.data)
@@ -277,3 +285,8 @@ class MAScraper(webdriver.Chrome):
         ).get_attribute('text'))
         print(f"LAST PAGE: {self.lastPage}")
 
+    def get_final_data(self):
+        return self.data['data']
+
+    def check_an_exist_ad(self):
+        print(self.last_record)
