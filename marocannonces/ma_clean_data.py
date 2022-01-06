@@ -1,5 +1,7 @@
+import re
 import warnings
 import dateparser
+from datetime import datetime
 import utils.constants as const
 
 # Ignore dateparser warnings regarding pytz
@@ -23,9 +25,32 @@ class MACleanData:
                     break
 
     def format_date(self):
-        for el in self.output_data.copy():
+        """for el in self.output_data.copy():
             dt = f"{el['date']} {el['time']}"
-            el['datetime'] = dateparser.parse(dt)  # .date() | .time()
+            el['datetime'] = dateparser.parse(dt)  # .date() | .time()"""
+        for el in self.output_data.copy():
+            # Format: "20 Déc 2021"
+            dd = re.search(r'(\d{2})[\s/.,-](\w{3})[\s/.,-](\d{4})$', el['date'])
+            if dd is not None:
+                dt = f"{el['date']} {el['time']}"
+                el['format_date'] = dateparser.parse(dt)
+            else:
+                # Format: "20 Déc"
+                dd1 = re.search(r'(\d{2})[\s/.,-](\w{3})$', el['date'])
+                if dd1 is not None:
+                    current_date = datetime.now()
+                    date = dateparser.parse(el['date'])
+                    ad_date = date
+                    if ad_date > current_date:
+                        year = (date.date().year - 1)
+                        new_date = dateparser.parse(f"{el['date']} {year} {el['time']}")
+                        el['format_date'] = new_date
+                    else:
+                        new_date = dateparser.parse(f"{el['date']} {el['time']}")
+                        el['format_date'] = new_date
+                else:
+                    new_date = dateparser.parse(f"{el['date']} {el['time']}")
+                    el['format_date'] = new_date
 
     def format_price(self):
         for el in self.output_data.copy():
@@ -49,7 +74,15 @@ class MACleanData:
         print(self.output_data)
 
 
-'''import re
+# cleaner = MACleanData()
+# cleaner.clean_up_missing_data()
+# # cleaner.show_output()
+# print(f"LENGTH OUTPUT DATA: {len(cleaner.output_data)}")
+#
+# for ell in cleaner.output_data:
+#     print(f"EL DATE: {ell}")
+"""
+import re
 from datetime import datetime
 import time
 import locale
@@ -96,20 +129,56 @@ phones_types = [
 
 def format_date():
     for el in clean_up_data.copy():
-        dt = f"{el['date']} {el['time']}"
-        el['date'] = dateparser.parse(dt).date()
-        # # Format: "20 Déc 2021"
-        # dd = re.search(r'(\d{2})[\s/.,-](\w{3})[\s/.,-](\d{4})$', el['date'])
-        # if dd is not None:
-        #     print(f'Format: 20 Déc 2021 -> {dd}')
-        # # Format: "20 Déc"
-        # else:
-        #     dd1 = re.search(r'(\d{2})[\s/.,-](\w{3})$', el['date'])
-        #     print(f'Format: 20 Déc -> {dd1}')
+        # dt = f"{el['date']} {el['time']}"
+        # el['date'] = dateparser.parse(dt).date()
+
+        # for el in self.output_data.copy():
+        #     dt = f"{el['date']} {el['time']}"
+        #     el['datetime'] = dateparser.parse(dt)  # .date() | .time()
+        # Format: "20 Déc 2021"
+        dd = re.search(r'(\d{2})[\s/.,-](\w{3})[\s/.,-](\d{4})$', el['date'])
+        if dd is not None:
+            # print(f'Format: 20 Déc 2021 -> {dd}')
+            dt = f"{el['date']} {el['time']}"
+            el['date'] = dateparser.parse(dt)
+            # print(f"DATA: {el['date']}")
+        # Format: "20 Déc"
+        else:
+            dd1 = re.search(r'(\d{2})[\s/.,-](\w{3})$', el['date'])
+            # print(f'Format: 20 Déc -> {dd1}')
+            if dd1 is not None:
+                # current_month = datetime.now().month
+                current_date = datetime.now()
+
+                date = dateparser.parse(el['date'])
+                # ad_month = date.date().month
+                ad_date = date
+
+                if ad_date > current_date:
+                    year = (date.date().year - 1)
+                    new_date = dateparser.parse(f"{el['date']} {year} {el['time']}")
+                    el['date'] = new_date
+                    print(f"AD Month {el['date']}")
+                else:
+                    print("ad_month <<< current_month")
+                    new_date = dateparser.parse(f"{el['date']} {el['time']}")
+                    print(f"AD Date {new_date}")
+            else:
+                dd2 = re.search(r'(\w)$', el['date'])
+                # print(f'Format: Hier/Aujourd\'hui -> {dd2}')
+                new_date = dateparser.parse(f"{el['date']} {el['time']}")
+                el['date'] = new_date
+                # print(f"AD Month {el['date']}")
+
+
+def format_price():
+    for el in clean_up_data.copy():
+        price = el['price'].replace('DH', '')
+        el['price'] = float(price.replace(' ', ''))
 
 
 def add_type_by_string_contains():
-    for el in const.MA_FAKE_DATA['data'].copy():
+    for el in const.MA_FAKE_DATA.copy():
         for phone in const.PHONE_TYPES[::-1]:
             if phone.lower() in el['title'].lower():
                 el['type'] = phone.lower()
@@ -126,9 +195,10 @@ def add_type_by_regex():
 def clean_up_missing_data():
     add_type_by_string_contains()
     format_date()
+    format_price()
 
-    for el in clean_up_data:
-        print(el)
+    # for el in clean_up_data:
+    #     print(el)
 
 
 clean_up_missing_data()
@@ -139,5 +209,5 @@ clean_up_missing_data()
 #
 # for date_string in [u"Aujourd'hui", "3 juillet", u"4 Août", u"Hier", "20 Déc 2021 12:30:43"]:
 #     print(dateparser.parse(date_string).date())
-#     print(dateparser.parse(date_string).time())
-'''
+#     print(dateparser.parse(date_string).time())"""
+

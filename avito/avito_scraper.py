@@ -20,7 +20,8 @@ from selenium.webdriver.chrome.options import Options
 
 
 class AvitoScraper(webdriver.Chrome):
-    def __init__(self, driver_path=const.SELENIUM_DRIVERS_PATH, teardown=False):
+    def __init__(self, driver_path=const.SELENIUM_DRIVERS_PATH, teardown=False, last_record=None):
+        print(f"AV LAST R TYPE: {type(last_record)}")
         self.driver_path = driver_path
         self.teardown = teardown
         os.environ['PATH'] += self.driver_path
@@ -31,6 +32,7 @@ class AvitoScraper(webdriver.Chrome):
         super(AvitoScraper, self).__init__(options=options)
         self.implicitly_wait(10)
         self.maximize_window()
+        self.last_record = last_record
 
         self.data = dict()
         self.data["status"] = 0
@@ -139,6 +141,17 @@ class AvitoScraper(webdriver.Chrome):
                 ad["city"] = " ".join(self.get_ad_city(box).split())
                 ad["date"] = " ".join(self.get_ad_date(box).split())
                 ad['source'] = const.AVITO_SOURCE
+
+                if (self.last_record is not None) and (self.last_record['original_date'] == ad['date']):
+                    price = float(ad['price'].replace(' ', ''))
+                    if (self.last_record['title'] == ad['title']) and (self.last_record['price'] == price):
+                        self.next = False
+                        print('##################################### EXACT #####################################')
+                        print(f"AV CURRENT RECORD: {ad}")
+                        print('##################################### EXACT #####################################')
+                        # print(f"LAST RECORD: {self.last_record}")
+                        self.quit()
+                        break
                 self.data["data"].append(ad)
             except Exception as e:
                 print(e)
@@ -210,20 +223,21 @@ class AvitoScraper(webdriver.Chrome):
         return title
 
     def get_ad_price(self, box: WebElement):
-        try:
-            price_container = box.find_element(
-                By.CSS_SELECTOR,
-                'span[data-testid="adPrice"]'
-            )
-            price = price_container.find_elements(
-                By.TAG_NAME,
-                'span'
-            )[0].get_attribute('innerHTML')
-            return price
-        except Exception as e:
-            print(e)
-            print("PRICE UNDEFINED")
-            return None
+        price_container = box.find_element(
+            By.CSS_SELECTOR,
+            'span[data-testid="adPrice"]'
+        )
+        price = price_container.find_elements(
+            By.TAG_NAME,
+            'span'
+        )[0].get_attribute('innerHTML')
+        return price
+        # try:
+        #
+        # except Exception as e:
+        #     print(e)
+        #     print("PRICE UNDEFINED")
+        #     return None
 
     def get_ad_city(self, box: WebElement):
         # svg1_container = WebDriverWait(self, 5).until(

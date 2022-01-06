@@ -1,5 +1,7 @@
+import re
 import warnings
 import dateparser
+from datetime import datetime
 import utils.constants as const
 
 # Ignore dateparser warnings regarding pytz
@@ -23,14 +25,32 @@ class AvitoCleanData:
                     break
 
     def format_date(self):
-        for el in self.output_data.copy():
+        """for el in self.output_data.copy():
             dt = f'{el["date"]}'  # {el['time']}"
-            el["date"] = dateparser.parse(dt)  # .date() | .time()
+            el["date"] = dateparser.parse(dt)  # .date() | .time()"""
+        for el in self.output_data.copy():
+            dd = re.search(r'(\d{2})[\s/.,-](\w{3})[\s/.,-](\d{4})$', el['date'])
+            if dd is not None:
+                dt = f"{el['date']}"
+                el['format_date'] = dateparser.parse(dt)
+            else:
+                current_date = datetime.now()
+                ad_date = dateparser.parse(el['date'])
+                if ad_date > current_date:
+                    year = (ad_date.date().year - 1)
+                    new_date = dateparser.parse(f"{el['date']} {year}")
+                    el['format_date'] = new_date
+                else:
+                    new_date = dateparser.parse(f"{el['date']}")
+                    el['format_date'] = new_date
 
     def format_price(self):
         for el in self.output_data.copy():
-            price = el['price'].replace('DH', '')
-            el['price'] = float(price.replace(' ', ''))
+            if el['price'] != '':
+                price = el['price'].replace('DH', '')
+                el['price'] = float(price.replace(' ', ''))
+            else:
+                self.output_data.remove(el)
 
     def clean_up_missing_data(self):
         self.add_type_by_string_contains()
@@ -44,7 +64,7 @@ class AvitoCleanData:
 
 # cleaner = AvitoCleanData()
 # cleaner.clean_up_missing_data()
-# cleaner.show_output()
+# # cleaner.show_output()
 # print(f"LENGTH OUTPUT DATA: {len(cleaner.output_data)}")
 #
 # for ell in cleaner.output_data:

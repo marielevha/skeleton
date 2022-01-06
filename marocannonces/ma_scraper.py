@@ -191,10 +191,6 @@ class MAScraper(webdriver.Chrome):
                 ad['time'] = " ".join(self.get_ad_date(box)[1].split())
                 ad['source'] = const.MA_SOURCE
 
-                current_record = {
-                    'title': ad['title'],
-                    'date': dateparser.parse(f"{ad['date']} {ad['time']}")
-                }
                 # print(f"CURRENT RECORD: {ad}")
                 # print(f"LAST RECORD: {self.last_record}")
                 # and (self.last_record['date'] < current_record['date'])

@@ -1,9 +1,10 @@
 from selenium.webdriver.chrome.options import Options
 
+# SCRAPING
 BASE_URL = "https://www.booking.com"
 AVITO_BASE_URL = 'https://www.avito.ma'
 MAROC_ANNOUNCE_BASE_URL = 'https://www.marocannonces.com/categorie/306/Multim%C3%A9dia.html?bloc=1'
-SCRAP_MARKET = 'Iphone 8'
+SCRAP_MARKET = 'Iphone 4'
 AVITO_SOURCE = 'avito'
 MA_SOURCE = 'marocannonces'
 SELENIUM_DRIVERS_PATH = r'/home/ssdlv/Documents/ssdlv/courses/python/skeleton/zdrivers/'
@@ -331,10 +332,10 @@ MA_FAKE_DATA = [
     {"title": "Iphone 6 plus 128g", "price": "7 400 DH", "city": "Casablanca", "date": "21 Sep", "time": "00:54"},
     {"title": "Iphone 6plus gris 128g", "price": "6 800 DH", "city": "Casablanca", "date": "20 Sep", "time": "20:02"},
     {"title": "Iphone 6 gold 64 go", "price": "6 500 DH", "city": "Casablanca", "date": "20 Sep", "time": "18:25"},
-    {"title": "Iphone 6 Noir 16 Go Officiel jamais ouvert", "price": "6 800 DH", "city": "Casablanca", "date": "20 Sep",
+    {"title": "Iphone 6 Noir 16 Go Officiel jamais ouvert", "price": "6 800 DH", "city": "Casablanca", "date": "05 Jan",
      "time": "15:27"},
-    {"title": "Iphone 6 plus", "price": "3 500 DH", "city": "Casablanca", "date": "20 Sep", "time": "14:50"},
-    {"title": "Iphone 5 blanc 16go", "price": "3 100 DH", "city": "Casablanca", "date": "20 Sep", "time": "14:29"}]
+    {"title": "Iphone 6 plus", "price": "3 500 DH", "city": "Casablanca", "date": "Hier", "time": "14:50"},
+    {"title": "Iphone 5 blanc 16go", "price": "3 100 DH", "city": "Casablanca", "date": "Aujourd'hui", "time": "14:39"}]
 AVITO_FAKE_DATA = [
     {"title": "IPHONE 8 plus 64GB", "price": "2 500", "city": "Casablanca", "date": "14:42", "source": "avito"},
     {"title": "iPhone XS 64GB", "price": "3 600", "city": "Casablanca", "date": "14:41", "source": "avito"},
@@ -3496,19 +3497,18 @@ AVITO_FAKE_DATA = [
     {"title": "IPHONE 11 OFFICIEL", "price": "4 800", "city": "Meknès", "date": "05 Décembre", "source": "avito"}]
 
 MA_DATE_LABEL = [
-    {'m': 'Jan', 'value': 1},
-    {'m': 'Jan', 'value': 1},
-    {'m': 'Jan', 'value': 1},
-    {'m': 'Jan', 'value': 1},
-    {'m': 'Jan', 'value': 1},
-    {'m': 'Mai', 'value': 1},
-    {'m': 'Jun', 'value': 1},
-    {'m': 'Jul', 'value': 1},
-    {'m': 'Aoû', 'value': 1},
-    {'m': 'Sep', 'value': 1},
-    {'m': 'Oct', 'value': 1},
-    {'m': 'Nov', 'value': 1},
-    {'m': 'Déc', 'value': 12},
+    {'month': 'Jan', 'value': 1},
+    {'month': 'Fév', 'value': 2},
+    {'month': 'Mar', 'value': 3},
+    {'month': 'Avr', 'value': 4},
+    {'month': 'Mai', 'value': 5},
+    {'month': 'Jun', 'value': 6},
+    {'month': 'Jul', 'value': 7},
+    {'month': 'Aoû', 'value': 8},
+    {'month': 'Sep', 'value': 9},
+    {'month': 'Oct', 'value': 10},
+    {'month': 'Nov', 'value': 11},
+    {'month': 'Déc', 'value': 12},
 ]
 
 
@@ -3520,3 +3520,16 @@ def CHROME_OPTIONS():
     options.add_argument("--start-maximized")
     options.add_argument("--headless")
     return options
+
+
+# SMTP
+SMTP_PORT = 587
+SMTP_HOST = 'smtp.gmail.com'
+SMTP_FROM = 'evenma.org@gmail.com'
+SMTP_TO = 'mspeedy733@gmail.com'
+SMTP_PASSWORD = 'evenm@ssdlv'
+SMTP_SUBJECT = 'ANNOUNCES DATA FROM SCRAPING'
+
+# CSV
+CSV_HEADER = ['Title', 'Price', 'Date', 'City', 'Source']
+
