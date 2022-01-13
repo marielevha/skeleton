@@ -25,8 +25,8 @@ class RunScraper:
         with AvitoScraper(last_record=last_record) as avito:
             # Scrap Data From Avito
             avito.land_first_page()
-            # avito.write_search_query(query=const.SCRAP_MARKET)
-            avito.write_search_query(query='iphone 4')
+            avito.write_search_query(query=const.SCRAP_MARKET)
+            # avito.write_search_query(query='iphone 4')
             avito.select_category(category='Téléphones')
             avito.get_total_pages()
             avito.report_data()

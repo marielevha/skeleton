@@ -4,7 +4,7 @@ from selenium.webdriver.chrome.options import Options
 BASE_URL = "https://www.booking.com"
 AVITO_BASE_URL = 'https://www.avito.ma'
 MAROC_ANNOUNCE_BASE_URL = 'https://www.marocannonces.com/categorie/306/Multim%C3%A9dia.html?bloc=1'
-SCRAP_MARKET = 'Iphone 4'
+SCRAP_MARKET = 'Iphone'
 AVITO_SOURCE = 'avito'
 MA_SOURCE = 'marocannonces'
 SELENIUM_DRIVERS_PATH = r'/home/ssdlv/Documents/ssdlv/courses/python/skeleton/zdrivers/'
@@ -43,6 +43,174 @@ PHONE_TYPES = [
     'iPhone 13 mini',
     'iPhone 13 Pro',
     'iPhone 13 Pro Max'
+]
+PHONE_TYPES_INFO = [
+    {
+        'model': 'iPhone 3G',
+        'max-price': '',
+        #'regex': r'(\w+)[12]$'
+        'regex': r''
+    },
+    {
+        'model': 'iPhone 3GS',
+        'max-price': '',
+        'regex': ''
+    },
+    {
+        'model': 'iPhone 4',
+        'max-price': '',
+        'regex': ''
+    },
+    {
+        'model': 'iPhone 4S',
+        'max-price': '',
+        'regex': ''
+    },
+    {
+        'model': 'iPhone 5',
+        'max-price': '',
+        'regex': ''
+    },
+    {
+        'model': 'iPhone 5c',
+        'max-price': '',
+        'regex': ''
+    },
+    {
+        'model': 'iPhone 5s',
+        'max-price': '',
+        'regex': ''
+    },
+    {
+        'model': 'iPhone 6',
+        'max-price': '',
+        'regex': ''
+    },
+    {
+        'model': 'iPhone 6 Plus',
+        'max-price': '',
+        'regex': ''
+    },
+    {
+        'model': 'iPhone 6s',
+        'max-price': '',
+        'regex': ''
+    },
+    {
+        'model': 'iPhone 6s Plus',
+        'max-price': '',
+        'regex': ''
+    },
+    {
+        'model': 'iPhone SE',
+        'max-price': '',
+        'regex': ''
+    },
+    {
+        'model': 'iPhone 7',
+        'max-price': '',
+        'regex': ''
+    },
+    {
+        'model': 'iPhone 7 Plus',
+        'max-price': '',
+        'regex': ''
+    },
+    {
+        'model': 'iPhone 8',
+        'max-price': '',
+        'regex': ''
+    },
+    {
+        'model': 'iPhone 8 Plus',
+        'max-price': '',
+        'regex': ''
+    },
+    {
+        'model': 'iPhone X',
+        'max-price': '',
+        'regex': ''
+    },
+    {
+        'model': 'iPhone XS',
+        'max-price': '',
+        'regex': ''
+    },
+    {
+        'model': 'iPhone XS Max',
+        'max-price': '',
+        'regex': ''
+    },
+    {
+        'model': 'iPhone XR',
+        'max-price': '',
+        'regex': ''
+    },
+    {
+        'model': 'iPhone 11',
+        'max-price': '',
+        'regex': r'(\b(\w+|\s)11(|\s)\b)',
+        # 'regex': r'(\b(\w+|\s)11(\s||\w+)\b)'
+    },
+    {
+        'model': 'iPhone 11 Pro',
+        'max-price': '',
+        'regex': r'(\b(\w+|\s)11(\s|)pro(\s|)\b)',
+    },
+    {
+        'model': 'iPhone 11 Pro Max',
+        'max-price': '',
+        'regex': r'(\b(\w+|\s)11(\s|)pro(\s|)(max|mx)\b)',
+        # 'regex': r'(\b 11 pro max\b)|([\s]|)(\b 11pro (max|mx)\b)'
+        # |(\b 11 pro max\b)
+        # (\b 11 pro (max|mx)\b)|(\b 11pro (max|mx)\b)|(\b\w+11pro\b)
+        # |(\b\w+11pro (max|mx)\b)
+    },
+    {
+        'model': 'iPhone SE',
+        'max-price': '',
+        'regex': ''
+    },
+    {
+        'model': 'iPhone 12',
+        'max-price': '',
+        'regex': r'(\b(\w+|\s)12(|\s)\b)',
+    },
+    {
+        'model': 'iPhone 12 mini',
+        'max-price': '',
+        'regex': ''
+    },
+    {
+        'model': 'iPhone 12 Pro',
+        'max-price': '',
+        'regex': r'(\b(\w+|\s)12(\s|)pro(\s|)\b)',
+    },
+    {
+        'model': 'iPhone 12 Pro Max',
+        'max-price': '',
+        'regex': r'(\b(\w+|\s)12(\s|)pro(\s|)(max|mx)\b)',
+    },
+    {
+        'model': 'iPhone 13',
+        'max-price': '',
+        'regex': r'(\b(\w+|\s)13(|\s)\b)',
+    },
+    {
+        'model': 'iPhone 13 mini',
+        'max-price': '',
+        'regex': ''
+    },
+    {
+        'model': 'iPhone 13 Pro',
+        'max-price': '',
+        'regex': r'(\b(\w+|\s)13(\s|)pro(\s|)\b)',
+    },
+    {
+        'model': 'iPhone 13 Pro Max',
+        'max-price': '',
+        'regex': r'(\b(\w+|\s)13(\s|)pro(\s|)(max|mx)\b)',
+    },
 ]
 MA_FAKE_DATA = [
     {"title": "Iphone 11 noir", "price": "5 500 DH", "city": "Casablanca", "date": "20 Déc 2021", "time": "17:14"},
@@ -3494,22 +3662,7 @@ AVITO_FAKE_DATA = [
     {"title": "Iphone 8 64", "price": "1 800", "city": "Meknès", "date": "05 Décembre", "source": "avito"},
     {"title": "iphone x 64 noir", "price": "3 000", "city": "Salé", "date": "05 Décembre", "source": "avito"},
     {"title": "iphone 5s", "price": "700", "city": "Fquih Ben Saleh", "date": "05 Décembre", "source": "avito"},
-    {"title": "IPHONE 11 OFFICIEL", "price": "4 800", "city": "Meknès", "date": "05 Décembre", "source": "avito"}]
-
-MA_DATE_LABEL = [
-    {'month': 'Jan', 'value': 1},
-    {'month': 'Fév', 'value': 2},
-    {'month': 'Mar', 'value': 3},
-    {'month': 'Avr', 'value': 4},
-    {'month': 'Mai', 'value': 5},
-    {'month': 'Jun', 'value': 6},
-    {'month': 'Jul', 'value': 7},
-    {'month': 'Aoû', 'value': 8},
-    {'month': 'Sep', 'value': 9},
-    {'month': 'Oct', 'value': 10},
-    {'month': 'Nov', 'value': 11},
-    {'month': 'Déc', 'value': 12},
-]
+    {"title": "IPHONE 11 OFFICIEL", "price": "4 800", "city": "Meknès", "date": "05 Décembre 2021", "source": "avito"}]
 
 
 # CHROME_OPTIONS = get_options()

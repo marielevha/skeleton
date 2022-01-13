@@ -25,10 +25,10 @@ class AvitoScraper(webdriver.Chrome):
         self.driver_path = driver_path
         self.teardown = teardown
         os.environ['PATH'] += self.driver_path
-        # options = webdriver.ChromeOptions()
-        # options.add_experimental_option('excludeSwitches', ['enable-logging'])
+        options = webdriver.ChromeOptions()
+        options.add_experimental_option('excludeSwitches', ['enable-logging'])
         # options.add_argument('headless')
-        options = const.CHROME_OPTIONS()
+        # # options = const.CHROME_OPTIONS()
         super(AvitoScraper, self).__init__(options=options)
         self.implicitly_wait(10)
         self.maximize_window()

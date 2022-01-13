@@ -1,4 +1,19 @@
 {% extends "./base.html" %}
 
 {% block body %}
+<!--{{ df | safe }}-->
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h3 class="">Tableau croisé dynamique</h3>
+        <div>
+          <a href="export" type="button" class="btn btn-sm btn-primary">Export CSV</a>
+          <a href="#" type="button" class="btn btn-sm btn-primary">Launch Scraping</a>
+        </div>
+    </div>
+
+    <div class="card-body">
+        {{ pt | safe }}
+    </div>
+</div>
+
 {% endblock %}

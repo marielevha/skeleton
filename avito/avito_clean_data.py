@@ -29,7 +29,7 @@ class AvitoCleanData:
             dt = f'{el["date"]}'  # {el['time']}"
             el["date"] = dateparser.parse(dt)  # .date() | .time()"""
         for el in self.output_data.copy():
-            dd = re.search(r'(\d{2})[\s/.,-](\w{3})[\s/.,-](\d{4})$', el['date'])
+            dd = re.search(r'(\d{2})[\s/.,-](\w+)[\s/.,-](\d{4})$', el['date'])
             if dd is not None:
                 dt = f"{el['date']}"
                 el['format_date'] = dateparser.parse(dt)
@@ -49,6 +49,8 @@ class AvitoCleanData:
             if el['price'] != '':
                 price = el['price'].replace('DH', '')
                 el['price'] = float(price.replace(' ', ''))
+                # if el['price'] >= float(50000):
+                #     self.output_data.remove(el)
             else:
                 self.output_data.remove(el)
 
@@ -62,10 +64,6 @@ class AvitoCleanData:
         print(self.output_data)
 
 
-# cleaner = AvitoCleanData()
-# cleaner.clean_up_missing_data()
-# # cleaner.show_output()
-# print(f"LENGTH OUTPUT DATA: {len(cleaner.output_data)}")
-#
-# for ell in cleaner.output_data:
-#     print(f"EL DATE: {ell}")
+# for el in const.AVITO_FAKE_DATA:
+#     dd = re.search(r'(\d{2})[\s/.,-](\w+)[\s/.,-](\d{4})$', el['date'])
+#     print(dd)

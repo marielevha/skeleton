@@ -17,6 +17,9 @@ from .models import Announce
 from .models import City
 from utils import constants as const
 from .run import launch_scraping
+from django_pandas.io import read_frame
+import pandas as pd
+import numpy as np
 
 
 def index(request):
@@ -83,7 +86,7 @@ def send_data_by_email(request):
     # Create a multipart message and set headers
     message = MIMEMultipart()
     message["From"] = const.SMTP_FROM
-    message["To"] = const.SMTP_TO
+    message["To"] = to
     message["Subject"] = const.SMTP_SUBJECT
     # message["Bcc"] = receiver_email
 
@@ -148,4 +151,42 @@ def send_data_by_email(request):
 
 
 def pivot_table(request):
-    return render(request, 'pivot-table.html')
+    items = Announce.objects.all().values()
+    df = pd.DataFrame(items)
+    cols = ['price']
+    value = ['A', 'D']
+    # df[cols] = df[cols].astype(float)
+    # pt = pd.pivot_table(df, index=['price'])
+    # pt = pd.pivot_table(df, index=["type", "city"], values=["price"], aggfunc=np.sum)
+    pt = pd.pivot_table(df, index=["type", "city"], values=["price"], aggfunc=np.average)
+    print(pt)
+    myDict = {
+        # "df": df.to_html(
+        #     classes='table table-striped table-bordered text-capitalize',
+        #     columns=['title', 'price', 'city', 'type', 'date'],
+        #     justify='justify',
+        # ),
+        "pt": pt.to_html(
+            classes='table table-striped table-bordered text-capitalize',
+            header=True,
+            justify='justify',
+            float_format='{:10.2f}'.format
+        ),
+    }
+    # qs = Announce.objects.all().values()
+    # df = read_frame(qs)
+    return render(request, 'pivot-table.html', context=myDict)
+
+
+def scrape(request):
+    r = threading.Thread(target=launch_scraping)
+    r.start()
+    response = redirect('/')
+    return response
+
+
+def test(request):
+    data = Announce.objects.all()
+    for el in data:
+        if el.price > float(20000):
+            print(el.price)

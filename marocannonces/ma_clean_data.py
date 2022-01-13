@@ -56,6 +56,8 @@ class MACleanData:
         for el in self.output_data.copy():
             price = el['price'].replace('DH', '')
             el['price'] = float(price.replace(' ', ''))
+            # if el['price'] >= float(50000):
+            #     self.output_data.remove(el)
 
     def sort_data(self):
         # from datetime import datetime
