@@ -208,7 +208,8 @@ PHONE_TYPES_INFO = [
     {
         'model': 'iPhone 13 Pro Max',
         'max-price': '',
-        'regex': r'(\b(\w+|\s)13(\s|)pro(\s|)(max|mx)\b)',
+        # 'regex': r'(\b(\w+|\s)13(\s|)pro(\s|)(max|mx)\b)',
+        'regex': r'(\b(\w+|\s)13(\s|)(pro|pr0|ppro|pr00|)(\s|)(max|mx)\b)',
     },
 ]
 MA_FAKE_DATA = [

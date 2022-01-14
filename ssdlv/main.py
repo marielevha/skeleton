@@ -59,13 +59,17 @@ import re
 import csv
 with open('../utils/sfs.csv', 'r') as read_obj:
     csv_reader = csv.reader(read_obj)
-    isFind = False
+    i = 0
+    j = 0
+    t = []
     for row in csv_reader:
         value = row[1]
+        i += 1
         for tp in const.PHONE_TYPES_INFO[::-1]:
             if tp['regex'] != '':
                 word = re.search(tp['regex'], value.lower())
                 if word is not None:
-                    print(f"TITLE: {value}, ID: {row[0]}, TYPE: {tp['model']}")
-                    isFind = True
+                    t.append(word)
+                    print(f"TITLE: {value.lower()}, ID: {row[0]}, TYPE: {tp['model']}")
                     break
+    print(f"FIND: {len(t)} | MISSING: {j} | ALL: {i}")
