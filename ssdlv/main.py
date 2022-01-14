@@ -56,18 +56,16 @@ except Exception as e:
 #     dd = re.search(r'(\d{2})[\s/.,-](\w+)[\s/.,-](\d{4})$', el['date'])
 #     print(dd)
 import re
-from csv import reader
+import csv
 with open('../utils/sfs.csv', 'r') as read_obj:
-    csv_reader = reader(read_obj)
+    csv_reader = csv.reader(read_obj)
+    isFind = False
     for row in csv_reader:
-        # print(f'CURRENT [Title: {row[1].lower()} | Type: {row[5].lower()}]')
-        for tp in const.PHONE_TYPES_INFO:
+        value = row[1]
+        for tp in const.PHONE_TYPES_INFO[::-1]:
             if tp['regex'] != '':
-                # print(f'CURRENT [Title: {row[1].lower()} | Type: {row[5].lower()}]')
-                # value = row[1].replace(' ', '').lower()
-                value = row[1].lower()
-                word = re.search(tp['regex'], value)
-                print(f'WORD: {word} | VALUE: {value}')
-                #print(f'NEW~~~~~[Title: {row[1]} | Type: {row[5]}]')
-            # else:
-            #     print(None)
+                word = re.search(tp['regex'], value.lower())
+                if word is not None:
+                    print(f"TITLE: {value}, ID: {row[0]}, TYPE: {tp['model']}")
+                    isFind = True
+                    break

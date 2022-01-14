@@ -91,11 +91,7 @@ def send_data_by_email(request):
     # message["Bcc"] = receiver_email
 
     # Add body to email
-    body = """\
-           Subject: Hi there
-
-           This message is sent from Python."""
-    message.attach(MIMEText(body, "plain"))
+    message.attach(MIMEText(const.SMTP_BODY, "plain"))
     filename = "scraping/data.csv"
 
     # Write CSV file
@@ -170,7 +166,7 @@ def pivot_table(request):
             classes='table table-striped table-bordered text-capitalize',
             header=True,
             justify='justify',
-            float_format='{:10.2f}'.format
+            float_format='{:10.2f} DH'.format
         ),
     }
     # qs = Announce.objects.all().values()

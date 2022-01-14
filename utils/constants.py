@@ -48,103 +48,102 @@ PHONE_TYPES_INFO = [
     {
         'model': 'iPhone 3G',
         'max-price': '',
-        #'regex': r'(\w+)[12]$'
-        'regex': r''
+        'regex': r'(\b(iphone)(|\s)3g(|\s)\b)'
     },
     {
         'model': 'iPhone 3GS',
         'max-price': '',
-        'regex': ''
+        'regex': r'(\b(iphone)(|\s)3gs(|\s)\b)'
     },
     {
         'model': 'iPhone 4',
         'max-price': '',
-        'regex': ''
+        'regex': r'(\b(iphone)(|\s)4(|\s)\b)'
     },
     {
         'model': 'iPhone 4S',
         'max-price': '',
-        'regex': ''
+        'regex': r'(\b(iphone)(|\s)4s(|\s)\b)'
     },
     {
         'model': 'iPhone 5',
         'max-price': '',
-        'regex': ''
+        'regex': r'(\b(iphone)(|\s)5(|\s)\b)'
     },
     {
         'model': 'iPhone 5c',
         'max-price': '',
-        'regex': ''
+        'regex': r'(\b(iphone)(|\s)5(|\s)c(|\s)\b)'
     },
     {
         'model': 'iPhone 5s',
         'max-price': '',
-        'regex': ''
+        'regex': r'(\b(iphone)(|\s)5(|\s)s(|\s)\b)'
     },
     {
         'model': 'iPhone 6',
         'max-price': '',
-        'regex': ''
+        'regex': r'(\b(iphone)(|\s)6(|\s)\b)'
     },
     {
         'model': 'iPhone 6 Plus',
         'max-price': '',
-        'regex': ''
+        'regex': r'(\b(\w+|\s)6(|\s)(plus|pls)(|\s)\b)'
     },
     {
         'model': 'iPhone 6s',
         'max-price': '',
-        'regex': ''
+        'regex': r'(\b(iphone)(|\s)6(|\s)s(|\s)\b)'
     },
     {
         'model': 'iPhone 6s Plus',
         'max-price': '',
-        'regex': ''
+        'regex': r'(\b(\w+|\s)6(|\s)s(|\s)(plus|pls)(|\s)\b)'
     },
     {
         'model': 'iPhone SE',
         'max-price': '',
-        'regex': ''
+        'regex': r'(\b(iphone)(|\s)se(|\s)\b)'
     },
     {
         'model': 'iPhone 7',
         'max-price': '',
-        'regex': ''
+        'regex': r'(\b(iphone)(|\s)7(|\s)\b)'
     },
     {
         'model': 'iPhone 7 Plus',
         'max-price': '',
-        'regex': ''
+        'regex': r'(\b(\w+|\s)7(|\s)(plus|pls)(|\s)\b)'
     },
     {
         'model': 'iPhone 8',
         'max-price': '',
-        'regex': ''
+        'regex': r'(\b(iphone)(|\s)8(|\s)\b)'
     },
     {
         'model': 'iPhone 8 Plus',
         'max-price': '',
-        'regex': ''
+        'regex': r'(\b(\w+|\s)8(|\s)(plus|pls)(|\s)\b)'
     },
     {
         'model': 'iPhone X',
         'max-price': '',
-        'regex': ''
+        'regex': r'(\b(iphone)(|\s)x(|\s)\b)'
     },
     {
         'model': 'iPhone XS',
         'max-price': '',
-        'regex': ''
+        'regex': r'(\b(\w+|\s)xs(|\s)\b)'
     },
     {
         'model': 'iPhone XS Max',
         'max-price': '',
-        'regex': ''
+        'regex': r'(\b(\w+|\s)xs(|\s)(max|mx)\b)'
     },
     {
         'model': 'iPhone XR',
         'max-price': '',
-        'regex': ''
+        'regex': r'(\b(\w+|\s)xr(|\s|\w+)\b)'
     },
     {
         'model': 'iPhone 11',
@@ -169,7 +168,7 @@ PHONE_TYPES_INFO = [
     {
         'model': 'iPhone SE',
         'max-price': '',
-        'regex': ''
+        'regex': r'(\b(iphone)(|\s)se(|\s)\b)'
     },
     {
         'model': 'iPhone 12',
@@ -179,7 +178,7 @@ PHONE_TYPES_INFO = [
     {
         'model': 'iPhone 12 mini',
         'max-price': '',
-        'regex': ''
+        'regex': r'(\b(\w+|\s)12(|\s)mini(|\s)\b)'
     },
     {
         'model': 'iPhone 12 Pro',
@@ -199,7 +198,7 @@ PHONE_TYPES_INFO = [
     {
         'model': 'iPhone 13 mini',
         'max-price': '',
-        'regex': ''
+        'regex': r'(\b(\w+|\s)13(|\s)mini(|\s)\b)'
     },
     {
         'model': 'iPhone 13 Pro',
@@ -3682,6 +3681,10 @@ SMTP_FROM = 'evenma.org@gmail.com'
 SMTP_TO = 'mspeedy733@gmail.com'
 SMTP_PASSWORD = 'evenm@ssdlv'
 SMTP_SUBJECT = 'ANNOUNCES DATA FROM SCRAPING'
+SMTP_BODY = body = """\
+           Bonjour
+           
+           Merci de trouver ci-joint un fichier csv contenant les données demandés."""
 
 # CSV
 CSV_HEADER = ['Title', 'Price', 'Date', 'City', 'Source']
