@@ -46,7 +46,7 @@ class RunScraper:
             ma.land_first_page()
             ma.select_category(category='Téléphones Portables')
             ma.select_city()
-            ma.write_search_query(query=const.SCRAP_MARKET)
+            ma.write_search_query(query='iphone 8')
             ma.click_search()
             ma.get_next_page_url()
             ma.report_results()
@@ -128,8 +128,8 @@ def launch_scraping():
         print(f"AVITO LR: {avito_last_record}")
     avito_thread = threading.Thread(target=runner.scrape_avito, args=(avito_last_record,))
 
-    # ma_thread.start()
-    avito_thread.start()
+    ma_thread.start()
+    # avito_thread.start()
 
     """# db_ma_thread = threading.Thread(target=runner.save_ma_data_to_db)
     db_avito_thread = threading.Thread(target=runner.save_avito_data_to_db)

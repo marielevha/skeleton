@@ -24,6 +24,17 @@ class MACleanData:
                     self.output_data.append(el)
                     break
 
+    def format_type_announce(self):
+        for el in self.input_data.copy():
+            original_title = el['title']
+            for model in const.PHONE_MODELS[::1]:
+                if model['regex'] != '':
+                    search_result = re.search(model['regex'], original_title.lower())
+                    if search_result is not None:
+                        el['type'] = model['model']
+                        self.output_data.append(el)
+                        break
+
     def format_date(self):
         """for el in self.output_data.copy():
             dt = f"{el['date']} {el['time']}"
@@ -55,9 +66,18 @@ class MACleanData:
     def format_price(self):
         for el in self.output_data.copy():
             price = el['price'].replace('DH', '')
-            el['price'] = float(price.replace(' ', ''))
+            price = float(price.replace(' ', ''))
+            if price < const.MIN_PRICE_ANNOUNCE or price > const.MAX_PRICE_ANNOUNCE:
+                self.output_data.remove(el)
+                continue
+            el['price'] = price
             # if el['price'] >= float(50000):
             #     self.output_data.remove(el)
+
+    def remove_nan(self):
+        for el in self.output_data.copy():
+            if 'afficheur' in el['title']:
+                self.output_data.remove(el)
 
     def sort_data(self):
         # from datetime import datetime
@@ -67,9 +87,11 @@ class MACleanData:
         print()
 
     def clean_up_missing_data(self):
-        self.add_type_by_string_contains()
+        # self.add_type_by_string_contains()
+        self.format_type_announce()
         self.format_date()
         self.format_price()
+        self.remove_nan()
         return self.output_data
 
     def show_output(self):

@@ -64,12 +64,14 @@ with open('../utils/sfs.csv', 'r') as read_obj:
     t = []
     for row in csv_reader:
         value = row[1]
-        i += 1
-        for tp in const.PHONE_TYPES_INFO[::-1]:
-            if tp['regex'] != '':
-                word = re.search(tp['regex'], value.lower())
-                if word is not None:
-                    t.append(word)
-                    print(f"TITLE: {value.lower()}, ID: {row[0]}, TYPE: {tp['model']}")
-                    break
+        # i += 1
+        # for tp in const.PHONE_MODELS[::-1]:
+        #     if tp['regex'] != '':
+        #         word = re.search(tp['regex'], value.lower())
+        #         if word is not None:
+        #             t.append(word)
+        #             print(f"TITLE: {value.lower()}, ID: {row[0]}, TYPE: {tp['model']}")
+        #             break
+        if 'afficheur' in row[1].lower():
+            print(f"TITLE: {row[1]}, PRICE: {row[2]}")
     print(f"FIND: {len(t)} | MISSING: {j} | ALL: {i}")

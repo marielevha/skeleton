@@ -9,7 +9,8 @@ AVITO_SOURCE = 'avito'
 MA_SOURCE = 'marocannonces'
 SELENIUM_DRIVERS_PATH = r'/home/ssdlv/Documents/ssdlv/courses/python/skeleton/zdrivers/'
 NOT_FOUND_ELEMENT = 'no such element: Unable to locate element'
-
+MAX_PRICE_ANNOUNCE = 50000
+MIN_PRICE_ANNOUNCE = 300
 PHONE_TYPES = [
     'iPhone 3G',
     'iPhone 3GS',
@@ -44,7 +45,7 @@ PHONE_TYPES = [
     'iPhone 13 Pro',
     'iPhone 13 Pro Max'
 ]
-PHONE_TYPES_INFO = [
+PHONE_MODELS = [
     {
         'model': 'iPhone 3G',
         'max-price': '',
