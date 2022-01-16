@@ -20,4 +20,4 @@ application = get_wsgi_application()
 
 # LAUNCH SCRAPING IN BACKGROUND
 run = threading.Thread(target=rs.launch_schedule)
-# run.start()
+run.start()
