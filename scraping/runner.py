@@ -117,7 +117,7 @@ def launch_scraping():
         avito_last_record = model_to_dict(avito_last_record)
     avito_thread = threading.Thread(target=runner.scrape_avito, args=(avito_last_record,))
 
-    # ma_thread.start()
+    ma_thread.start()
     avito_thread.start()
 
 

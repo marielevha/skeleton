@@ -18,10 +18,10 @@ class AvitoScraper(webdriver.Chrome):
         self.driver_path = driver_path
         self.teardown = teardown
         os.environ['PATH'] += self.driver_path
-        options = webdriver.ChromeOptions()
-        options.add_experimental_option('excludeSwitches', ['enable-logging'])
+        # options = webdriver.ChromeOptions()
+        # options.add_experimental_option('excludeSwitches', ['enable-logging'])
         # options.add_argument('headless')
-        # # options = const.CHROME_OPTIONS()
+        options = const.CHROME_OPTIONS()
         super(AvitoScraper, self).__init__(options=options)
         self.implicitly_wait(10)
         self.maximize_window()
@@ -129,10 +129,15 @@ class AvitoScraper(webdriver.Chrome):
 
                 # if (self.last_record is not None) and (self.last_record['original_date'] == ad['date']):
                 if self.last_record is not None:
-                    print(f"AD: {type(dateparser.parse(ad['date']))} | LR: {type(self.last_record['date'])}")
+                    # print(f"AD: {type(dateparser.parse(ad['date']))} | LR: {type(self.last_record['date'])}")
                     if dateparser.parse(ad['date']).replace(tzinfo=utc) > self.last_record['date'].replace(tzinfo=utc):
                         print(f"AD: {ad}")
-                        quit(0)
+                        self.data["data"].append(ad)
+                        #quit(0)
+                    else:
+                        self.next = False
+                        self.quit()
+                        break
                     # price = float(ad['price'].replace(' ', ''))
                     # if (self.last_record['title'] == ad['title']) and (self.last_record['price'] == price):
                     #     self.next = False
