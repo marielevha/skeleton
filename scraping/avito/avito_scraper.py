@@ -8,6 +8,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
 import dateparser
+import pytz
+utc = pytz.UTC
 
 
 class AvitoScraper(webdriver.Chrome):
@@ -128,7 +130,7 @@ class AvitoScraper(webdriver.Chrome):
                 # if (self.last_record is not None) and (self.last_record['original_date'] == ad['date']):
                 if self.last_record is not None:
                     print(f"AD: {type(dateparser.parse(ad['date']))} | LR: {type(self.last_record['date'])}")
-                    if dateparser.parse(ad['date']) > self.last_record['date']:
+                    if dateparser.parse(ad['date']).replace(tzinfo=utc) > self.last_record['date'].replace(tzinfo=utc):
                         print(f"AD: {ad}")
                         quit(0)
                     # price = float(ad['price'].replace(' ', ''))
@@ -138,6 +140,7 @@ class AvitoScraper(webdriver.Chrome):
                     #     break
                 # self.data["data"].append(ad)
             except Exception as e:
+                print(e)
                 continue
 
         # Pass to next page if exist
@@ -187,7 +190,6 @@ class AvitoScraper(webdriver.Chrome):
         link = ''
         try:
             link = box.find_element(By.TAG_NAME, 'a').get_attribute('href').strip()
-            print(link)
         finally:
             return link
 

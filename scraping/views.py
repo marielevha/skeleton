@@ -116,7 +116,7 @@ def send_data_by_email(request):
     with smtplib.SMTP(const.SMTP_HOST, const.SMTP_PORT) as server:
         server.starttls(context=context)
         server.login(const.SMTP_FROM, const.SMTP_PASSWORD)
-        server.sendmail(const.SMTP_FROM, const.SMTP_TO, text)
+        server.sendmail(const.SMTP_FROM, to, text)
 
     return redirect('send_email')
 
