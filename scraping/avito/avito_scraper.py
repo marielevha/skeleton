@@ -132,6 +132,7 @@ class AvitoScraper(webdriver.Chrome):
                     # print(f"AD: {type(dateparser.parse(ad['date']))} | LR: {type(self.last_record['date'])}")
                     if dateparser.parse(ad['date']).replace(tzinfo=utc) > self.last_record['date'].replace(tzinfo=utc):
                         print(f"AD: {ad}")
+                        print(f"LR: {self.last_record}")
                         self.data["data"].append(ad)
                         #quit(0)
                     else:
