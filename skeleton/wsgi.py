@@ -11,7 +11,7 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 import threading
-from scraping import run as rs
+from scraping import runner as rs
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'skeleton.settings')
 

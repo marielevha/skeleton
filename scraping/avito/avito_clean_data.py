@@ -2,7 +2,7 @@ import re
 import warnings
 import dateparser
 from datetime import datetime
-import utils.constants as const
+from scraping.utils import constants as const
 
 # Ignore dateparser warnings regarding pytz
 warnings.filterwarnings(
@@ -23,6 +23,17 @@ class AvitoCleanData:
                     el["type"] = phone.lower()
                     self.output_data.append(el)
                     break
+
+    def format_type_announce(self):
+        for el in self.input_data.copy():
+            original_title = el['title']
+            for model in const.PHONE_MODELS[::-1]:
+                if model['regex'] != '':
+                    search_result = re.search(model['regex'], original_title.lower())
+                    if search_result is not None:
+                        el['type'] = model['model']
+                        self.output_data.append(el)
+                        break
 
     def format_date(self):
         """for el in self.output_data.copy():
@@ -48,16 +59,27 @@ class AvitoCleanData:
         for el in self.output_data.copy():
             if el['price'] != '':
                 price = el['price'].replace('DH', '')
-                el['price'] = float(price.replace(' ', ''))
-                # if el['price'] >= float(50000):
-                #     self.output_data.remove(el)
+                price = float(price.replace(' ', ''))
+                if price < const.MIN_PRICE_ANNOUNCE or price > const.MAX_PRICE_ANNOUNCE:
+                    self.output_data.remove(el)
+                    continue
+                el['price'] = price
             else:
                 self.output_data.remove(el)
 
+    def remove_nan(self):
+        for el in self.output_data.copy():
+            if 'afficheur' in el['title'].lower():
+                self.output_data.remove(el)
+            elif 'samsung' in el['title'].lower():
+                self.output_data.remove(el)
+
     def clean_up_missing_data(self):
-        self.add_type_by_string_contains()
+        # self.add_type_by_string_contains()
+        self.format_type_announce()
         self.format_date()
         self.format_price()
+        self.remove_nan()
         return self.output_data
 
     def show_output(self):

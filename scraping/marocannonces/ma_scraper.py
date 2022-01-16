@@ -1,14 +1,11 @@
-import time
 import os
-import utils.constants as const
+from scraping.utils import constants as const
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.chrome.options import Options
-import dateparser
 import warnings
 
 # Ignore dateparser warnings regarding pytz
@@ -20,14 +17,12 @@ warnings.filterwarnings(
 
 class MAScraper(webdriver.Chrome):
     def __init__(self, driver_path=const.SELENIUM_DRIVERS_PATH, teardown=False, last_record=None):
-        print(f"LAST R TYPE: {type(last_record)}")
-        # if last_record is None:
-        #     last_record = {'title': 'Apple iPhone 8 64Go Gold', 'price': '1 800 DH', 'date': '22 Aoû', 'time': '14:54'}
         self.driver_path = driver_path
         self.teardown = teardown
         os.environ['PATH'] += self.driver_path
         options = webdriver.ChromeOptions()
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
+        # options = const.CHROME_OPTIONS()
         super(MAScraper, self).__init__(options=options)
         self.implicitly_wait(10)
         self.maximize_window()
@@ -90,7 +85,6 @@ class MAScraper(webdriver.Chrome):
         search_button.click()
 
     def get_next_page_url(self):
-        print('####################################### GET NEXT PAGE URL #######################################')
         try:
             div_content = WebDriverWait(self, 5).until(
                 EC.presence_of_element_located((
@@ -106,14 +100,9 @@ class MAScraper(webdriver.Chrome):
             ) > 0
 
             if is_paginate:
-                # Report data
-                # self.report_results()
-
                 pagination_ul = WebDriverWait(self, 5).until(
                     EC.presence_of_element_located((By.CSS_SELECTOR, 'ul[class="paging"]'))
                 )
-
-                # print(pagination_ul.get_attribute('innerHTML'))
 
                 # Get next page url
                 next_li = pagination_ul.find_element(
@@ -125,70 +114,27 @@ class MAScraper(webdriver.Chrome):
                     'a'
                 ).get_attribute('href')
                 self.pathPage = int(self.path.split('=')[-1])
-                print(f"NEXT PAGE URL: {self.path}")
-                print(f"NEXT PAGE NUMBER: {self.pathPage}")
                 self.next = True
                 self.get_last_page(pagination_ul)
         except Exception as e:
             self.path = None
             self.next = False
-            print(e)
 
     def report_results(self):
-        # result_list = self.find_element(
-        #     By.CSS_SELECTOR,
-        #     'ul[class="cars-list"]'
-        # )
         result_list = WebDriverWait(self, 5).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, 'ul[class="cars-list"]'))
         )
-        # print(result_list.get_attribute('outerHTML'))
 
-        boxes = result_list.find_elements(
-            By.TAG_NAME,
-            'li'
-        )
-        # boxes = WebDriverWait(self, 10).until(
-        #     EC.presence_of_all_elements_located((By.TAG_NAME, "li"))
-        # )
-        # print(boxes)
-        # collections = []
-        # print(len(boxes))
+        boxes = result_list.find_elements(By.TAG_NAME, 'li')
         for box in boxes:
             try:
-                '''title = box.find_element(
-                    By.TAG_NAME,
-                    'h3'
-                ).get_attribute('innerHTML')
-
-                price = box.find_element(
-                    By.TAG_NAME,
-                    'strong[class="price"]'
-                ).get_attribute('innerHTML')
-
-                city = box.find_element(
-                    By.CSS_SELECTOR,
-                    'span[class="location"]'
-                ).get_attribute('innerHTML')
-
-                date_elements = box.find_elements(
-                    By.CSS_SELECTOR,
-                    'em[class="date"]'
-                )
-
-                el = date_elements[1].get_attribute('innerHTML')
-                date = el.split('<br>')[0]
-                time = date_elements[1].find_element(
-                    By.TAG_NAME,
-                    'span'
-                ).get_attribute('innerHTML')'''
-
                 ad = dict()
                 ad['title'] = " ".join(self.get_ad_title(box).split())
                 ad['price'] = " ".join(self.get_ad_price(box).split())
                 ad['city'] = " ".join(self.get_ad_city(box).split())
                 ad['date'] = " ".join(self.get_ad_date(box)[0].split())
                 ad['time'] = " ".join(self.get_ad_date(box)[1].split())
+                ad['link'] = self.get_ad_link(box)
                 ad['source'] = const.MA_SOURCE
 
                 # print(f"CURRENT RECORD: {ad}")
@@ -199,20 +145,15 @@ class MAScraper(webdriver.Chrome):
                     price = (ad['price'].replace('DH', '')).replace(' ', '')
                     if (self.last_record['title'] == ad['title']) and (self.last_record['price'] == float(price)):
                         self.next = False
-                        print('##################################### EXACT #####################################')
-                        print(f"CURRENT RECORD: {ad}")
-                        print('##################################### EXACT #####################################')
                         # print(f"LAST RECORD: {self.last_record}")
                         self.quit()
                         break
                 self.data['data'].append(ad)
             except Exception as e:
-                print(e)
                 continue
                 # if const.NOT_FOUND_ELEMENT in e:
                 #     print(e)
                 #     continue
-        print(self.data)
         self.navigate_to_next_page()
 
         # print(boxes)
@@ -252,8 +193,12 @@ class MAScraper(webdriver.Chrome):
         ).get_attribute('innerHTML')
         return [date, time]
 
-    def show_ad(self):
-        print(self.data)
+    def get_ad_link(self, box: WebElement):
+        link = ''
+        try:
+            link = box.find_element(By.TAG_NAME, 'a').get_attribute('href').strip()
+        finally:
+            return link
 
     def navigate_to_next_page(self):
         if self.path is not None and self.next:
@@ -279,7 +224,6 @@ class MAScraper(webdriver.Chrome):
             By.TAG_NAME,
             'a'
         ).get_attribute('text'))
-        print(f"LAST PAGE: {self.lastPage}")
 
     def get_final_data(self):
         return self.data['data']

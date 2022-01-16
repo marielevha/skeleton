@@ -1,27 +1,18 @@
-import json
 import time
 import os
-import utils.constants as const
+from scraping.utils import constants as const
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.chrome.options import Options
-
-
-# def get_options():
-#     options = Options()
-#     options.add_argument("--window-size=1920,1080")
-#     options.add_argument("--start-maximized")
-#     options.add_argument("--headless")
-#     return options
+import dateparser
 
 
 class AvitoScraper(webdriver.Chrome):
     def __init__(self, driver_path=const.SELENIUM_DRIVERS_PATH, teardown=False, last_record=None):
-        print(f"AV LAST R TYPE: {type(last_record)}")
+        print(f"LAST RECORD: {last_record}")
         self.driver_path = driver_path
         self.teardown = teardown
         os.environ['PATH'] += self.driver_path
@@ -84,17 +75,10 @@ class AvitoScraper(webdriver.Chrome):
         )
         filter_element.clear()
         filter_element.send_keys(city)
-        time.sleep(3)
 
     def select_city(self, city=None):
         if city is not None:
             self.filter_city(city)
-        # city_element = Select(self.find_element(
-        #     By.ID,
-        #     'searcharea_expanded'
-        # ))
-        # city_element.select_by_visible_text(city)
-
         city_container_el = self.find_element(
             By.CSS_SELECTOR,
             'div[data-testid="cities"]'
@@ -104,7 +88,6 @@ class AvitoScraper(webdriver.Chrome):
             By.CSS_SELECTOR,
             'button[class="h1t2kn-0 bNbXEC"]'
         )
-        # city_elements[1].click()
         isChooseCity = False
         for el in city_elements:
             if not isChooseCity:
@@ -132,7 +115,6 @@ class AvitoScraper(webdriver.Chrome):
             'div[class="oan6tk-0 hEwuhz"]'
         )
 
-        print(len(boxes))
         for box in boxes:
             try:
                 ad = dict()
@@ -140,76 +122,26 @@ class AvitoScraper(webdriver.Chrome):
                 ad["price"] = self.get_ad_price(box)
                 ad["city"] = " ".join(self.get_ad_city(box).split())
                 ad["date"] = " ".join(self.get_ad_date(box).split())
+                ad['link'] = self.get_ad_link(box)
                 ad['source'] = const.AVITO_SOURCE
 
-                if (self.last_record is not None) and (self.last_record['original_date'] == ad['date']):
-                    price = float(ad['price'].replace(' ', ''))
-                    if (self.last_record['title'] == ad['title']) and (self.last_record['price'] == price):
-                        self.next = False
-                        print('##################################### EXACT #####################################')
-                        print(f"AV CURRENT RECORD: {ad}")
-                        print('##################################### EXACT #####################################')
-                        # print(f"LAST RECORD: {self.last_record}")
-                        self.quit()
-                        break
-                self.data["data"].append(ad)
+                # if (self.last_record is not None) and (self.last_record['original_date'] == ad['date']):
+                if self.last_record is not None:
+                    print(f"AD: {type(dateparser.parse(ad['date']))} | LR: {type(self.last_record['date'])}")
+                    if dateparser.parse(ad['date']) > self.last_record['date']:
+                        print(f"AD: {ad}")
+                        quit(0)
+                    # price = float(ad['price'].replace(' ', ''))
+                    # if (self.last_record['title'] == ad['title']) and (self.last_record['price'] == price):
+                    #     self.next = False
+                    #     self.quit()
+                    #     break
+                # self.data["data"].append(ad)
             except Exception as e:
-                print(e)
                 continue
 
-        print(self.data)
         # Pass to next page if exist
         self.navigate_to_next_page()
-
-    def navigate_to_next_page1(self):
-        self.scroll_down()
-        self.implicitly_wait(10)
-
-        self.find_element(
-            By.XPATH,
-            ''
-        ).click()
-        # div = self.find_element(
-        #     By.CSS_SELECTOR,
-        #     'div[class="sc-2y0ggl-0 jXwFwm"]'
-        # )
-        #
-        # print(div.find_elements(By.TAG_NAME, 'a')[-1].get_attribute('innerHTML'))
-        # print(div.find_elements(By.TAG_NAME, 'a')[-1].get_attribute('outerHTML'))
-        # div.find_elements(By.TAG_NAME, 'a')[-1].click()
-        # next_page_element = div.find_element(
-        #     By.CSS_SELECTOR,
-        #     'svg[aria-labelledby="ChevronRightTitleID"]'
-        # )
-        #
-        # next_page_element.click()
-        # print(next_page_element.get_attribute('outerHTML'))
-        # next_page_element.click()
-        # try:
-        #     paginate_container_el = WebDriverWait(self, 5).until(
-        #         EC.presence_of_element_located((
-        #             By.CSS_SELECTOR,
-        #             'div[class="sc-2y0ggl-0 jXwFwm"]'
-        #         ))
-        #     )
-        #
-        #     isLastPage = False
-        #     while not isLastPage:
-        #         print('Hello')
-        #         try:
-        #             next_page_element = paginate_container_el.find_element(
-        #                 By.CSS_SELECTOR,
-        #                 'svg[aria-labelledby="ChevronRightTitleID"]'
-        #             )
-        #
-        #             next_page_element.click()
-        #         except Exception as e:
-        #             print(e)
-        #             print("IS LAST PAGE")
-        #             isLastPage = True
-        # except Exception as e:
-        #     print(e)
-        #     print('NOT PAGINATE')
 
     def get_ad_title(self, box: WebElement):
         title_container = box.find_element(
@@ -232,27 +164,8 @@ class AvitoScraper(webdriver.Chrome):
             'span'
         )[0].get_attribute('innerHTML')
         return price
-        # try:
-        #
-        # except Exception as e:
-        #     print(e)
-        #     print("PRICE UNDEFINED")
-        #     return None
 
     def get_ad_city(self, box: WebElement):
-        # svg1_container = WebDriverWait(self, 5).until(
-        #     EC.presence_of_element_located((
-        #         By.CSS_SELECTOR,
-        #         'svg[aria-labelledby="TimeFillTitleID"]'
-        #     ))
-        # )
-
-        # svg2_container = WebDriverWait(self, 5).until(
-        #     EC.presence_of_element_located((
-        #         By.CSS_SELECTOR,
-        #         'svg[aria-labelledby="MapPinFillTitleID"]'
-        #     ))
-        # )
         container = box.find_elements(
             By.CSS_SELECTOR,
             'span[class="sc-1x0vz2r-0 kIeipZ"]'
@@ -270,15 +183,13 @@ class AvitoScraper(webdriver.Chrome):
             date = container[0].get_attribute('innerHTML')
             return date
 
-    def scroll_up(self):
-        self.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-
-    def scroll_down(self):
-        self.execute_script("window.scrollTo(0, 7080);")
-
-    def show_ad(self):
-        # print(json.dumps(self.data))
-        print(self.data)
+    def get_ad_link(self, box: WebElement):
+        link = ''
+        try:
+            link = box.find_element(By.TAG_NAME, 'a').get_attribute('href').strip()
+            print(link)
+        finally:
+            return link
 
     def get_final_data(self):
         return self.data['data']
@@ -286,8 +197,6 @@ class AvitoScraper(webdriver.Chrome):
     def navigate_to_next_page(self):
         if self.path is not None and self.totalPages > self.currentPages and self.next:
             self.currentPages += 1
-            script = "window.location.href='" + self.path + "'"
-            print('PATH: ' + self.path)
             self.execute_script(f"window.location.href='{self.path}'")
             self.get_total_pages()
             self.report_data()
@@ -307,13 +216,10 @@ class AvitoScraper(webdriver.Chrome):
                 By.TAG_NAME, 'a'
             )[-2].get_attribute('innerHTML')
             self.totalPages = int(page)
-            print(self.totalPages)
 
             self.get_next_page_url()
         except Exception as e:
             self.totalPages = 1
-            print(e)
-            print('NOT EXIST PAGINATION')
 
     def get_next_page_url(self):
         try:
@@ -327,9 +233,6 @@ class AvitoScraper(webdriver.Chrome):
             self.path = paginate_container_el.find_elements(
                 By.TAG_NAME, 'a'
             )[-1].get_attribute('href')
-            print(self.path)
             self.next = True
         except Exception as e:
             self.path = None
-            print(e)
-            print('NOT EXIST PAGINATION')

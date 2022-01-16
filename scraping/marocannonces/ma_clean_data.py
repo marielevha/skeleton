@@ -2,7 +2,7 @@ import re
 import warnings
 import dateparser
 from datetime import datetime
-import utils.constants as const
+from scraping.utils import constants as const
 
 # Ignore dateparser warnings regarding pytz
 warnings.filterwarnings(
@@ -27,7 +27,7 @@ class MACleanData:
     def format_type_announce(self):
         for el in self.input_data.copy():
             original_title = el['title']
-            for model in const.PHONE_MODELS[::1]:
+            for model in const.PHONE_MODELS[::-1]:
                 if model['regex'] != '':
                     search_result = re.search(model['regex'], original_title.lower())
                     if search_result is not None:
@@ -76,15 +76,10 @@ class MACleanData:
 
     def remove_nan(self):
         for el in self.output_data.copy():
-            if 'afficheur' in el['title']:
+            if 'afficheur' in el['title'].lower():
                 self.output_data.remove(el)
-
-    def sort_data(self):
-        # from datetime import datetime
-        # my_dates = ['5-Nov-18', '25-Mar-17', '1-Nov-18', '7-Mar-17']
-        # my_dates.sort(key=lambda date: datetime.strptime(date, "%d-%b-%y"))
-        # print(my_dates)
-        print()
+            elif 'samsung' in el['title'].lower():
+                self.output_data.remove(el)
 
     def clean_up_missing_data(self):
         # self.add_type_by_string_contains()
@@ -93,9 +88,6 @@ class MACleanData:
         self.format_price()
         self.remove_nan()
         return self.output_data
-
-    def show_output(self):
-        print(self.output_data)
 
 
 # cleaner = MACleanData()
