@@ -121,7 +121,7 @@ class AvitoScraper(webdriver.Chrome):
             By.CSS_SELECTOR,
             'div[class="oan6tk-0 hEwuhz"]'
         )
-
+        i = 0
         for box in boxes:
             try:
                 ad = dict()
@@ -136,6 +136,8 @@ class AvitoScraper(webdriver.Chrome):
                 if self.last_record is not None:
                     # print(f"AD: {type(dateparser.parse(ad['date']))} | LR: {type(self.last_record['date'])}")
                     if dateparser.parse(ad['date']).replace(tzinfo=utc) > self.last_record['date'].replace(tzinfo=utc):
+                        i += 1
+                        print(i)
                         # print(f"AD: {ad}")
                         # print(f"LR: {self.last_record}")
                         self.data["data"].append(ad)
