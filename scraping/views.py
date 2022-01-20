@@ -20,6 +20,8 @@ from scraping.utils import constants as const
 from .runner import launch_scraping
 import pandas as pd
 import numpy as np
+import pytz
+utc = pytz.UTC
 
 
 def index(request):
@@ -144,12 +146,32 @@ def scrape(request):
 
 def test(request):
     try:
-        a = Announce.objects.create(
+        """a = Announce.objects.create(
             title='title', city='city', price=1000.0,
             type='type', source='source', date=datetime.datetime.now(),
             original_date='date', original_time='el_time', link='link'
         ).save()
-        print(a)
+        print(a)"""
+
+        # Import data
+        with open('scraping/announce.csv', 'r') as read_obj:
+            csv_reader = csv.reader(read_obj)
+            for row in csv_reader:
+                print(row[4])
+                d = datetime.datetime.fromisoformat(row[4])
+                # dd = d.strftime('%Y-%m-%d %H:%M:%S')
+                dd = d.strftime('%d %b %Y %H:%M')
+                # print(dateparser.parse(dd))
+                try:
+                    Announce.objects.create(
+                        title=row[1], city=row[3], price=row[2],
+                        type=row[5], source=row[7], date=dateparser.parse(dd),
+                        link=row[6]
+                    ).save()
+                except:
+                    continue
+                # , original_date=row[8], original_time=row[9]
+                # continue
     except Exception as e:
         print(e)
     finally:

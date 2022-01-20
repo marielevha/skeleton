@@ -44,8 +44,8 @@ class RunScraper:
             ma.land_first_page()
             # ma.select_category(category='Téléphones Portables')
             # ma.select_city()
-            # ma.write_search_query(query=const.SCRAP_MARKET)
-            # ma.click_search()
+            ma.write_search_query(query=const.SCRAP_MARKET)
+            ma.click_search()
             ma.get_next_page_url()
             ma.report_results()
 

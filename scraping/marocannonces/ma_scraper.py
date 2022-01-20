@@ -21,6 +21,7 @@ warnings.filterwarnings(
 
 class MAScraper(webdriver.Chrome):
     def __init__(self, driver_path=const.SELENIUM_DRIVERS_PATH, teardown=False, last_record=None):
+        print(f"LAST RECORD: {last_record}")
         self.driver_path = driver_path
         self.teardown = teardown
         os.environ['PATH'] += self.driver_path
