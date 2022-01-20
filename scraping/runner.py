@@ -9,6 +9,7 @@ from .models import Announce
 import threading
 import schedule
 import pytz
+
 utc = pytz.UTC
 
 
@@ -18,7 +19,6 @@ class RunScraper:
         self.state = False
         self.ma_final_data = []
         self.avito_final_data = []
-        # self.db = Announce()
 
     def scrape_avito(self, last_record=None):
         with AvitoScraper(last_record=last_record) as avito:
@@ -34,7 +34,7 @@ class RunScraper:
             avito_cleaner = AvitoCleanData(avito.get_final_data())
             self.avito_final_data = avito_cleaner.clean_up_missing_data()
 
-            #Saving to db
+            # Saving to db
             db_avito_thread = threading.Thread(target=self.save_avito_data_to_db)
             db_avito_thread.start()
 
@@ -88,13 +88,25 @@ class RunScraper:
 
     def save_ma_data_to_db(self):
         # SAVE MA DATA
+        count = 0
         for el in self.ma_final_data[::-1]:
-            self.save_in_db(el, const.MA_SOURCE)
+            try:
+                self.save_in_db(el, const.MA_SOURCE)
+                count += 1
+            except Exception as e:
+                print(e)
+        print(f"ADD ({count}) ANNOUNCES FROM MAROC ANNONCES")
 
     def save_avito_data_to_db(self):
         # SAVE AVITO DATA
+        count = 0
         for el in self.avito_final_data[::-1]:
-            self.save_in_db(el, const.AVITO_SOURCE)
+            try:
+                self.save_in_db(el, const.AVITO_SOURCE)
+                count += 1
+            except Exception as e:
+                print(e)
+        print(f"ADD ({count}) ANNOUNCES FROM AVITO")
 
 
 def launch_schedule():
@@ -119,6 +131,3 @@ def launch_scraping():
 
     ma_thread.start()
     avito_thread.start()
-
-
-

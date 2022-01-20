@@ -18,10 +18,10 @@ class AvitoScraper(webdriver.Chrome):
         self.driver_path = driver_path
         self.teardown = teardown
         os.environ['PATH'] += self.driver_path
-        options = webdriver.ChromeOptions()
-        options.add_experimental_option('excludeSwitches', ['enable-logging'])
+        # options = webdriver.ChromeOptions()
+        # options.add_experimental_option('excludeSwitches', ['enable-logging'])
         # options.add_argument('headless')
-        # options = const.CHROME_OPTIONS()
+        options = const.CHROME_OPTIONS()
         super(AvitoScraper, self).__init__(options=options)
         self.implicitly_wait(10)
         self.maximize_window()
@@ -35,7 +35,6 @@ class AvitoScraper(webdriver.Chrome):
         self.totalPages = 1
         self.currentPages = 1
         self.next = False
-        # self.data['current_url'] = self.current_url
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if self.teardown:
@@ -62,10 +61,6 @@ class AvitoScraper(webdriver.Chrome):
         category_element.select_by_visible_text(category)
 
     def filter_city(self, city=None):
-        # filter_element = self.find_element(
-        #     By.CSS_SELECTOR,
-        #     'input[id="filter-list-input"]'
-        # )
         open_filter_element = WebDriverWait(self, 5).until(
             EC.presence_of_element_located((
                 By.CSS_SELECTOR,
@@ -121,7 +116,6 @@ class AvitoScraper(webdriver.Chrome):
             By.CSS_SELECTOR,
             'div[class="oan6tk-0 hEwuhz"]'
         )
-        i = 0
         for box in boxes:
             try:
                 ad = dict()
@@ -132,26 +126,13 @@ class AvitoScraper(webdriver.Chrome):
                 ad['link'] = self.get_ad_link(box)
                 ad['source'] = const.AVITO_SOURCE
 
-                # if (self.last_record is not None) and (self.last_record['original_date'] == ad['date']):
                 if self.last_record is not None:
-                    # print(f"AD: {type(dateparser.parse(ad['date']))} | LR: {type(self.last_record['date'])}")
                     if dateparser.parse(ad['date']).replace(tzinfo=utc) > self.last_record['date'].replace(tzinfo=utc):
-                        i += 1
-                        print(i)
-                        # print(f"AD: {ad}")
-                        # print(f"LR: {self.last_record}")
                         self.data["data"].append(ad)
-                        #quit(0)
                     else:
                         self.next = False
                         self.quit()
                         break
-                    # price = float(ad['price'].replace(' ', ''))
-                    # if (self.last_record['title'] == ad['title']) and (self.last_record['price'] == price):
-                    #     self.next = False
-                    #     self.quit()
-                    #     break
-                # self.data["data"].append(ad)
             except Exception as e:
                 print(e)
                 continue

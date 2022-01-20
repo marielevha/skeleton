@@ -36,9 +36,6 @@ class AvitoCleanData:
                         break
 
     def format_date(self):
-        """for el in self.output_data.copy():
-            dt = f'{el["date"]}'  # {el['time']}"
-            el["date"] = dateparser.parse(dt)  # .date() | .time()"""
         for el in self.output_data.copy():
             dd = re.search(r'(\d{2})[\s/.,-](\w+)[\s/.,-](\d{4})$', el['date'])
             if dd is not None:
@@ -85,7 +82,3 @@ class AvitoCleanData:
     def show_output(self):
         print(self.output_data)
 
-
-# for el in const.AVITO_FAKE_DATA:
-#     dd = re.search(r'(\d{2})[\s/.,-](\w+)[\s/.,-](\d{4})$', el['date'])
-#     print(dd)

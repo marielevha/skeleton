@@ -9,5 +9,4 @@ urlpatterns = [
     path('sendEmail', views.send_email, name='send_email'),
     path('sendEmailData', views.send_data_by_email, name='send_data_by_email'),
     path('pivotTable', views.pivot_table, name='pivot_table'),
-    path('test', views.test, name='test'),
 ]

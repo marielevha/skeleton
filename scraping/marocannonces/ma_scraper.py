@@ -25,9 +25,9 @@ class MAScraper(webdriver.Chrome):
         self.driver_path = driver_path
         self.teardown = teardown
         os.environ['PATH'] += self.driver_path
-        options = webdriver.ChromeOptions()
-        options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        # options = const.CHROME_OPTIONS()
+        # options = webdriver.ChromeOptions()
+        # options.add_experimental_option('excludeSwitches', ['enable-logging'])
+        options = const.CHROME_OPTIONS()
         super(MAScraper, self).__init__(options=options)
         self.implicitly_wait(10)
         self.maximize_window()
@@ -44,7 +44,6 @@ class MAScraper(webdriver.Chrome):
         self.currentPages = 1
         self.next = False
         self.page = 1
-        # self.data['current_url'] = self.current_url
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if self.teardown:
@@ -143,33 +142,15 @@ class MAScraper(webdriver.Chrome):
                 ad['source'] = const.MA_SOURCE
 
                 if self.last_record is not None:
-                    # print(f"AD: {type(dateparser.parse(ad['date']))} | LR: {type(self.last_record['date'])}")
                     if dateparser.parse(ad['date']).replace(tzinfo=utc) > self.last_record['date'].replace(tzinfo=utc):
-                        # print(f"AD: {ad}")
                         self.data["data"].append(ad)
-                        #quit(0)
                     else:
                         self.next = False
                         self.quit()
                         break
-
-                # if (self.last_record is not None) and (self.last_record['original_date'] == ad['date']) and (
-                #         self.last_record['original_time'] == ad['time']):
-                #     price = (ad['price'].replace('DH', '')).replace(' ', '')
-                #     if (self.last_record['title'] == ad['title']) and (self.last_record['price'] == float(price)):
-                #         self.next = False
-                #         # print(f"LAST RECORD: {self.last_record}")
-                #         self.quit()
-                #         break
-                # self.data['data'].append(ad)
             except Exception as e:
                 continue
-                # if const.NOT_FOUND_ELEMENT in e:
-                #     print(e)
-                #     continue
         self.navigate_to_next_page()
-
-        # print(boxes)
 
     def get_ad_title(self, box: WebElement):
         title = box.find_element(
