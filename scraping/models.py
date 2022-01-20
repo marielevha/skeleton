@@ -16,8 +16,8 @@ class Announce(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['title', 'city', 'source'],
-                name='title_city_source_unique_constraint'
+                fields=['title', 'city', 'source', 'price'],
+                name='title_city_source_price_unique_constraint'
             )
         ]
 

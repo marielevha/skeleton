@@ -18,10 +18,10 @@ class AvitoScraper(webdriver.Chrome):
         self.driver_path = driver_path
         self.teardown = teardown
         os.environ['PATH'] += self.driver_path
-        # options = webdriver.ChromeOptions()
-        # options.add_experimental_option('excludeSwitches', ['enable-logging'])
+        options = webdriver.ChromeOptions()
+        options.add_experimental_option('excludeSwitches', ['enable-logging'])
         # options.add_argument('headless')
-        options = const.CHROME_OPTIONS()
+        # options = const.CHROME_OPTIONS()
         super(AvitoScraper, self).__init__(options=options)
         self.implicitly_wait(10)
         self.maximize_window()
@@ -42,12 +42,17 @@ class AvitoScraper(webdriver.Chrome):
             self.quit()
 
     def land_first_page(self):
-        self.get(const.AVITO_BASE_URL)
+        self.get(const.AVITO_BASE_URL2)
 
     def write_search_query(self, query):
-        query_element = self.find_element(By.NAME, 'q')
-        query_element.clear()
-        query_element.send_keys(query)
+        global query_element
+        try:
+            query_element = self.find_element(By.NAME, 'q')
+        except:
+            query_element = self.find_element(By.CSS_SELECTOR, 'input[placeholder="Que recherchez-vous?"]')
+        finally:
+            query_element.clear()
+            query_element.send_keys(query)
 
     def select_category(self, category='Toutes les catégories'):
         category_element = Select(self.find_element(
@@ -161,7 +166,7 @@ class AvitoScraper(webdriver.Chrome):
             By.TAG_NAME,
             'span'
         ).get_attribute('innerHTML')
-        return title
+        return title.lower()
 
     def get_ad_price(self, box: WebElement):
         price_container = box.find_element(
@@ -181,7 +186,7 @@ class AvitoScraper(webdriver.Chrome):
         )
         if len(container) == 2:
             city = container[1].get_attribute('innerHTML')
-            return city
+            return city.lower()
 
     def get_ad_date(self, box: WebElement):
         container = box.find_elements(

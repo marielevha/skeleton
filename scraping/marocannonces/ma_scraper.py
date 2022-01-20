@@ -24,9 +24,9 @@ class MAScraper(webdriver.Chrome):
         self.driver_path = driver_path
         self.teardown = teardown
         os.environ['PATH'] += self.driver_path
-        # options = webdriver.ChromeOptions()
-        # options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        options = const.CHROME_OPTIONS()
+        options = webdriver.ChromeOptions()
+        options.add_experimental_option('excludeSwitches', ['enable-logging'])
+        # options = const.CHROME_OPTIONS()
         super(MAScraper, self).__init__(options=options)
         self.implicitly_wait(10)
         self.maximize_window()
@@ -175,7 +175,7 @@ class MAScraper(webdriver.Chrome):
             By.TAG_NAME,
             'h3'
         ).get_attribute('innerHTML')
-        return title
+        return title.lower()
 
     def get_ad_price(self, box: WebElement):
         price = box.find_element(
@@ -189,7 +189,7 @@ class MAScraper(webdriver.Chrome):
             By.CSS_SELECTOR,
             'span[class="location"]'
         ).get_attribute('innerHTML')
-        return city
+        return city.lower()
 
     def get_ad_date(self, box: WebElement):
         date_elements = box.find_elements(

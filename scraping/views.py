@@ -145,7 +145,7 @@ def scrape(request):
 def test(request):
     try:
         a = Announce.objects.create(
-            title='title', city='city', price=1000,
+            title='title', city='city', price=1000.0,
             type='type', source='source', date=datetime.datetime.now(),
             original_date='date', original_time='el_time', link='link'
         ).save()

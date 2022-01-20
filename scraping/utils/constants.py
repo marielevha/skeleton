@@ -3,7 +3,9 @@ from selenium.webdriver.chrome.options import Options
 # SCRAPING
 BASE_URL = "https://www.booking.com"
 AVITO_BASE_URL = 'https://www.avito.ma'
+AVITO_BASE_URL2 = 'https://www.avito.ma/fr/maroc/téléphones/iphone--à_vendre'
 MAROC_ANNOUNCE_BASE_URL = 'https://www.marocannonces.com/categorie/306/Multim%C3%A9dia.html?bloc=1'
+MAROC_ANNOUNCE_BASE_URL2 = 'https://www.marocannonces.com/maroc/telephones-portables--b359.html?kw=Iphone'
 SCRAP_MARKET = 'Iphone'
 AVITO_SOURCE = 'avito'
 MA_SOURCE = 'marocannonces'

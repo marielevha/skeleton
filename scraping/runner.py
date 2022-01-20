@@ -24,9 +24,9 @@ class RunScraper:
         with AvitoScraper(last_record=last_record) as avito:
             # Scrap Data From Avito
             avito.land_first_page()
-            avito.write_search_query(query=const.SCRAP_MARKET)
+            # avito.write_search_query(query=const.SCRAP_MARKET)
             # avito.write_search_query(query='iphone 4')
-            avito.select_category(category='Téléphones')
+            # avito.select_category(category='Téléphones')
             avito.get_total_pages()
             avito.report_data()
 
@@ -42,10 +42,10 @@ class RunScraper:
         # Scrap Data From Maroc Annonces
         with MAScraper(last_record=last_record) as ma:
             ma.land_first_page()
-            ma.select_category(category='Téléphones Portables')
-            ma.select_city()
-            ma.write_search_query(query=const.SCRAP_MARKET)
-            ma.click_search()
+            # ma.select_category(category='Téléphones Portables')
+            # ma.select_city()
+            # ma.write_search_query(query=const.SCRAP_MARKET)
+            # ma.click_search()
             ma.get_next_page_url()
             ma.report_results()
 
