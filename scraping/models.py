@@ -13,3 +13,11 @@ class Announce(models.Model):
     original_date = models.CharField(max_length=255)
     original_time = models.CharField(max_length=255)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['title', 'city', 'source'],
+                name='title_city_source_unique_constraint'
+            )
+        ]
+
